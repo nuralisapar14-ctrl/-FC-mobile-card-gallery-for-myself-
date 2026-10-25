@@ -82,15 +82,15 @@
                 </div>
                 
                 <div class="space-y-3">
-                    <h3 class="text-base font-semibold text-amber-400">Tools & Apps Used</h3>
+                    <h3 class="text-base font-semibold text-amber-400">Tools & Credits</h3>
                     <p>
-                        To craft these designs, I rely on several key platforms and applications: <strong>FC Forum</strong> for community inspiration and templates, <strong>PicsArt</strong> for detailed image editing and layering, <strong>RenderZ</strong> for stats and assets reference, and <strong>ChatGPT</strong> to brainstorm design ideas and structure content.
+                        To craft these designs, I rely on platforms like <strong>FC Forum</strong>, <strong>PicsArt</strong>, <strong>RenderZ</strong>, and <strong>ChatGPT</strong>. Special thanks to TikTok creator <strong>@kchau_000</strong> for guidance and inspiration on expanding the card collection and portfolio layout.
                     </p>
                 </div>
             </div>
 
             <div class="border-t border-slate-700 pt-4 mt-4 text-xs text-slate-400">
-                <p><strong>Development Note:</strong> This website is currently an Alpha Version using browser LocalStorage for data persistence. Full cloud database integration is planned for next month.</p>
+                <p><strong>Development Note:</strong> This website is an Alpha Version featuring compressed mobile-friendly image processing and LocalStorage persistence.</p>
             </div>
         </section>
 
@@ -101,7 +101,7 @@
         <p>© FC Mobile Custom Card Gallery • CAS Project Portfolio</p>
     </footer>
 
-    <!-- JavaScript Logic with LocalStorage Persistence -->
+    <!-- JavaScript Logic with Mobile Compression & LocalStorage -->
     <script>
         const uploadForm = document.getElementById('uploadForm');
         const cardTitleInput = document.getElementById('cardTitle');
@@ -109,11 +109,14 @@
         const galleryGrid = document.getElementById('galleryGrid');
         const cardCount = document.getElementById('cardCount');
 
-        // Load saved cards from LocalStorage
         let cards = JSON.parse(localStorage.getItem('fc_cards')) || [];
 
         function saveAndRender() {
-            localStorage.setItem('fc_cards', JSON.stringify(cards));
+            try {
+                localStorage.setItem('fc_cards', JSON.stringify(cards));
+            } catch (e) {
+                alert('Storage limit reached! Try deleting some cards.');
+            }
             renderGallery();
         }
 
@@ -159,20 +162,47 @@
                 const reader = new FileReader();
 
                 reader.onload = function(event) {
-                    cards.unshift({
-                        title: title,
-                        image: event.target.result
-                    });
-                    
-                    saveAndRender();
-                    uploadForm.reset();
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxSize = 800; // Resize to fit securely in mobile storage
+
+                        if (width > height) {
+                            if (width > maxSize) {
+                                height *= maxSize / width;
+                                width = maxSize;
+                            }
+                        } else {
+                            if (height > maxSize) {
+                                width *= maxSize / height;
+                                height = maxSize;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+
+                        cards.unshift({
+                            title: title,
+                            image: compressedDataUrl
+                        });
+                        
+                        saveAndRender();
+                        uploadForm.reset();
+                    };
+                    img.src = event.target.result;
                 };
 
                 reader.readAsDataURL(file);
             }
         });
 
-        // Initial render on page load
         renderGallery();
     </script>
 </body>
