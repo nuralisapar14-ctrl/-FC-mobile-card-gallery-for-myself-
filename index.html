@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC Mobile Design Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col justify-between">
+
+    <!-- Header / Hero Section -->
+    <header class="bg-slate-800 border-b border-slate-700 py-12 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-block p-3 bg-amber-500/10 rounded-full mb-4">
+                <i class="fa-solid font-bold fa-futbol text-3xl text-amber-400"></i>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
+                FC Mobile Card Portfolio <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500 text-slate-900 rounded-full align-middle">Alpha v1.0</span>
+            </h1>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+                Добро пожаловать в мою цифровую галерею! Здесь я публикую свои кастомные дизайны карточек для FC Mobile, а также рассказываю о своем процессе создания.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-6 py-10 w-full space-y-12">
+
+        <!-- Upload Form Section -->
+        <section class="bg-slate-800 border border-slate-700 rounded-2xl p-6 md:p-8 card-shadow">
+            <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> Добавить новую карточку
+            </h2>
+            <p class="text-slate-400 text-sm mb-6">Загрузите изображение с вашего устройства, чтобы мгновенно просмотреть его в галерее портфолио.</p>
+
+            <form id="uploadForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="cardTitle" placeholder="Имя игрока / Название" required
+                    class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
+                
+                <input type="file" id="cardImage" accept="image/*" required
+                    class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-slate-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-900 hover:file:bg-amber-400 cursor-pointer">
+
+                <button type="submit" 
+                    class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg px-6 py-2.5 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Опубликовать
+                </button>
+            </form>
+        </section>
+
+        <!-- Gallery Section -->
+        <section>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-amber-400"></i> Галерея работ
+                </h2>
+                <span id="cardCount" class="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-3 py-1 rounded-full">0 карточек</span>
+            </div>
+
+            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Карточки будут появляться здесь -->
+            </div>
+        </section>
+
+        <!-- About & Workflow Section -->
+        <section class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-6 md:p-8 space-y-6">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-amber-400"></i> О хобби и процессе создания
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-300 text-sm leading-relaxed">
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold text-amber-400">Как я начал?</h3>
+                    <p>
+                        Увлечение цифровым дизайном началось с интереса к мобильному футболу и карточкам игроков. Мне всегда нравилось, как визуально оформляются ивенты в FC Mobile, и я решил научиться создавать собственные уникальные концепты.
+                    </p>
+                </div>
+                
+                <div class="space-y-3">
+                    <h3 class="text-base font-semibold text-amber-400">Инструменты и процесс</h3>
+                    <p>
+                        Для работы я использую графические редакторы, вырезаю объекты, подбираю ретро и современные фотографии игроков, накладываю текстуры, рамки, эффект свечения и кастомные элементы рейтинга.
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-700 pt-4 mt-4 text-xs text-slate-400">
+                <p><strong>Примечание по разработке:</strong> Данный сайт является Альфа-версией (Alpha Version). В следующем месяце планируется расширение функционала и улучшение интерфейса.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        <p>© FC Mobile Custom Card Gallery • CAS Project Portfolio</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const cardTitleInput = document.getElementById('cardTitle');
+        const cardImageInput = document.getElementById('cardImage');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const cardCount = document.getElementById('cardCount');
+
+        let totalCards = 0;
+
+        function updateCardCount() {
+            cardCount.textContent = `${totalCards} ${totalCards === 1 ? 'карточка' : 'карточек'}`;
+        }
+
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = cardTitleInput.value.trim();
+            const file = cardImageInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'bg-slate-800 border border-slate-700 rounded-xl overflow-hidden card-shadow flex flex-col justify-between group hover:border-amber-500/50 transition duration-300';
+                    
+                    cardDiv.innerHTML = `
+                        <div class="p-4 bg-slate-900/50 flex justify-between items-center border-b border-slate-700/50">
+                            <h3 class="font-bold text-white text-sm truncate">${title}</h3>
+                            <button onclick="this.closest('.group').remove(); totalCards--; updateCardCount();" class="text-slate-500 hover:text-red-400 text-xs transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="p-4 flex justify-center items-center bg-slate-950/40 min-h-[220px]">
+                            <img src="${event.target.result}" alt="${title}" class="max-h-60 object-contain rounded-lg">
+                        </div>
+                    `;
+
+                    galleryGrid.prepend(cardDiv);
+                    totalCards++;
+                    updateCardCount();
+
+                    // Reset form
+                    uploadForm.reset();
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
