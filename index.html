@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
                 FC Mobile Card Portfolio <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500 text-slate-900 rounded-full align-middle">Alpha v1.0</span>
             </h1>
             <p class="text-slate-400 text-lg max-w-2xl mx-auto">
-                Добро пожаловать в мою цифровую галерею! Здесь я публикую свои кастомные дизайны карточек для FC Mobile, а также рассказываю о своем процессе создания.
+                Welcome to my digital gallery! Here I showcase my custom FC Mobile player card designs and share my creative journey.
             </p>
         </div>
     </header>
@@ -35,12 +35,12 @@
         <!-- Upload Form Section -->
         <section class="bg-slate-800 border border-slate-700 rounded-2xl p-6 md:p-8 card-shadow">
             <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> Добавить новую карточку
+                <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> Add New Card
             </h2>
-            <p class="text-slate-400 text-sm mb-6">Загрузите изображение с вашего устройства, чтобы мгновенно просмотреть его в галерее портфолио.</p>
+            <p class="text-slate-400 text-sm mb-6">Upload an image from your device to instantly preview it in the portfolio gallery.</p>
 
             <form id="uploadForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" id="cardTitle" placeholder="Имя игрока / Название" required
+                <input type="text" id="cardTitle" placeholder="Player Name / Card Title" required
                     class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
                 
                 <input type="file" id="cardImage" accept="image/*" required
@@ -48,7 +48,7 @@
 
                 <button type="submit" 
                     class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg px-6 py-2.5 transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-plus"></i> Опубликовать
+                    <i class="fa-solid fa-plus"></i> Publish Card
                 </button>
             </form>
         </section>
@@ -57,40 +57,40 @@
         <section>
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group text-amber-400"></i> Галерея работ
+                    <i class="fa-solid fa-layer-group text-amber-400"></i> Gallery
                 </h2>
-                <span id="cardCount" class="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-3 py-1 rounded-full">0 карточек</span>
+                <span id="cardCount" class="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-3 py-1 rounded-full">0 cards</span>
             </div>
 
             <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <!-- Карточки будут появляться здесь -->
+                <!-- Cards will appear here -->
             </div>
         </section>
 
         <!-- About & Workflow Section -->
         <section class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-6 md:p-8 space-y-6">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-circle-info text-amber-400"></i> О хобби и процессе создания
+                <i class="fa-solid fa-circle-info text-amber-400"></i> About My Hobby & Process
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-300 text-sm leading-relaxed">
                 <div class="space-y-3">
-                    <h3 class="text-base font-semibold text-amber-400">Как я начал?</h3>
+                    <h3 class="text-base font-semibold text-amber-400">How I Started</h3>
                     <p>
-                        Увлечение цифровым дизайном началось с интереса к мобильному футболу и карточкам игроков. Мне всегда нравилось, как визуально оформляются ивенты в FC Mobile, и я решил научиться создавать собственные уникальные концепты.
+                        My passion for digital graphic design started from playing mobile football games and admiring custom player cards. I loved how events were visually presented in FC Mobile, which inspired me to create my own unique concepts.
                     </p>
                 </div>
                 
                 <div class="space-y-3">
-                    <h3 class="text-base font-semibold text-amber-400">Инструменты и процесс</h3>
+                    <h3 class="text-base font-semibold text-amber-400">Tools & Apps Used</h3>
                     <p>
-                        Для работы я использую графические редакторы, вырезаю объекты, подбираю ретро и современные фотографии игроков, накладываю текстуры, рамки, эффект свечения и кастомные элементы рейтинга.
+                        To craft these designs, I rely on several key platforms and applications: <strong>FC Forum</strong> for community inspiration and templates, <strong>PicsArt</strong> for detailed image editing and layering, <strong>RenderZ</strong> for stats and assets reference, and <strong>ChatGPT</strong> to brainstorm design ideas and structure content.
                     </p>
                 </div>
             </div>
 
             <div class="border-t border-slate-700 pt-4 mt-4 text-xs text-slate-400">
-                <p><strong>Примечание по разработке:</strong> Данный сайт является Альфа-версией (Alpha Version). В следующем месяце планируется расширение функционала и улучшение интерфейса.</p>
+                <p><strong>Development Note:</strong> This website is currently an Alpha Version. Further feature expansions and UI upgrades are planned for next month.</p>
             </div>
         </section>
 
@@ -112,7 +112,7 @@
         let totalCards = 0;
 
         function updateCardCount() {
-            cardCount.textContent = `${totalCards} ${totalCards === 1 ? 'карточка' : 'карточек'}`;
+            cardCount.textContent = `${totalCards} ${totalCards === 1 ? 'card' : 'cards'}`;
         }
 
         uploadForm.addEventListener('submit', function(e) {
