@@ -67,6 +67,30 @@
             </div>
         </section>
 
+        <!-- Special Acknowledgments / Creator Credit Section -->
+        <section class="bg-gradient-to-r from-amber-500/10 via-slate-800 to-slate-800 border border-amber-500/30 rounded-2xl p-6 md:p-8 card-shadow">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-star text-amber-400"></i> Special Thanks & Credits
+            </h2>
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900/80 p-5 rounded-xl border border-slate-700">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center border border-amber-400/50">
+                        <i class="fa-brands fa-tiktok text-2xl text-amber-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">kchau_000</h3>
+                        <p class="text-xs text-slate-400">TikTok Card Design Creator</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-300 max-w-md">
+                    Huge shoutout to <strong>kchau_000</strong> for helping expand the card gallery and providing valuable design inspiration for this portfolio!
+                </p>
+                <a href="https://www.tiktok.com/@kchau_000" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded-lg text-xs font-semibold border border-amber-500/40 transition">
+                    Visit Profile <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
+                </a>
+            </div>
+        </section>
+
         <!-- About & Workflow Section -->
         <section class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-6 md:p-8 space-y-6">
             <h2 class="text-2xl font-bold text-white flex items-center gap-2">
@@ -82,9 +106,9 @@
                 </div>
                 
                 <div class="space-y-3">
-                    <h3 class="text-base font-semibold text-amber-400">Tools & Credits</h3>
+                    <h3 class="text-base font-semibold text-amber-400">Tools & Platforms Used</h3>
                     <p>
-                        To craft these designs, I rely on platforms like <strong>FC Forum</strong>, <strong>PicsArt</strong>, <strong>RenderZ</strong>, and <strong>ChatGPT</strong>. Special thanks to TikTok creator <strong>@kchau_000</strong> for guidance and inspiration on expanding the card collection and portfolio layout.
+                        To craft these designs, I rely on several key tools: <strong>FC Forum</strong> for community assets, <strong>PicsArt</strong> for image editing and layering, <strong>RenderZ</strong> for player stats reference, and <strong>ChatGPT</strong> to outline content and brainstorm ideas.
                     </p>
                 </div>
             </div>
@@ -167,7 +191,7 @@
                         const canvas = document.createElement('canvas');
                         let width = img.width;
                         let height = img.height;
-                        const maxSize = 800; // Resize to fit securely in mobile storage
+                        const maxSize = 800; // Resize image for fast mobile storage
 
                         if (width > height) {
                             if (width > maxSize) {
