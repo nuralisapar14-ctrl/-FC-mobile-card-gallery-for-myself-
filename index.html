@@ -6,6 +6,139 @@
     <title>FC Mobile Design Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs for Global Cloud Sync -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Public Artifacts Firebase Configuration
+        const firebaseConfig = typeof __FIREBASE_CONFIG__ !== 'undefined' ? __FIREBASE_CONFIG__ : {
+            apiKey: "AIzaSyDummyKeyForArtifactsFallback-999",
+            authDomain: "fc-mobile-portfolio.firebaseapp.com",
+            projectId: "fc-mobile-portfolio",
+            storageBucket: "fc-mobile-portfolio.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123:web:abc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const appId = typeof __APP_ID__ !== 'undefined' ? __APP_ID__ : 'fc-mobile-portfolio-user-alpha';
+        const cardsCollectionRef = collection(db, `artifacts/${appId}/public/data/gallery_cards`);
+
+        // DOM Elements
+        const uploadForm = document.getElementById('uploadForm');
+        const cardTitleInput = document.getElementById('cardTitle');
+        const cardImageInput = document.getElementById('cardImage');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const cardCount = document.getElementById('cardCount');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Render Gallery from Cloud Firestore
+        function renderGallery(snapshotDocs) {
+            galleryGrid.innerHTML = '';
+            let count = 0;
+
+            snapshotDocs.forEach((docSnap) => {
+                const card = docSnap.data();
+                const cardId = docSnap.id;
+                count++;
+
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'bg-slate-800 border border-slate-700 rounded-xl overflow-hidden card-shadow flex flex-col justify-between group hover:border-amber-500/50 transition duration-300';
+                
+                cardDiv.innerHTML = `
+                    <div class="p-4 bg-slate-900/50 flex justify-between items-center border-b border-slate-700/50">
+                        <h3 class="font-bold text-white text-sm truncate">${escapeHtml(card.title)}</h3>
+                        <button onclick="window.deleteCardFromCloud('${cardId}')" class="text-slate-500 hover:text-red-400 text-xs transition" title="Delete card">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 flex justify-center items-center bg-slate-950/40 min-h-[220px]">
+                        <img src="${card.image}" alt="${escapeHtml(card.title)}" class="max-h-60 object-contain rounded-lg">
+                    </div>
+                `;
+                galleryGrid.appendChild(cardDiv);
+            });
+
+            cardCount.textContent = `${count} ${count === 1 ? 'card' : 'cards'}`;
+        }
+
+        // Real-time listener for global sync across all devices
+        const q = query(cardsCollectionRef);
+        onSnapshot(q, (snapshot) => {
+            renderGallery(snapshot.docs);
+        }, (error) => {
+            console.error("Error loading cloud cards: ", error);
+        });
+
+        // Delete function attached to window
+        window.deleteCardFromCloud = async function(id) {
+            try {
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/gallery_cards`, id));
+            } catch (error) {
+                alert('Error deleting card: ' + error.message);
+            }
+        };
+
+        // Form Submit & Canvas Image Compression
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = cardTitleInput.value.trim();
+            const file = cardImageInput.files[0];
+
+            if (!file) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading to Cloud...`;
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                const img = new Image();
+                img.onload = async function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const maxSize = 600; // Optimal size for fast cloud storage & mobile loading
+
+                    if (width > height) {
+                        if (width > maxSize) { height *= maxSize / width; width = maxSize; }
+                    } else {
+                        if (height > maxSize) { width *= maxSize / height; height = maxSize; }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+                    try {
+                        await addDoc(cardsCollectionRef, {
+                            title: title,
+                            image: compressedDataUrl,
+                            createdAt: Date.now()
+                        });
+                        uploadForm.reset();
+                    } catch (error) {
+                        alert('Upload failed: ' + error.message);
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Publish Card`;
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+
     <style>
         .card-shadow {
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
@@ -21,10 +154,10 @@
                 <i class="fa-solid font-bold fa-futbol text-3xl text-amber-400"></i>
             </div>
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
-                FC Mobile Card Portfolio <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500 text-slate-900 rounded-full align-middle">Alpha v1.0</span>
+                FC Mobile Card Portfolio <span class="text-xs font-semibold px-2.5 py-1 bg-amber-500 text-slate-900 rounded-full align-middle">Cloud v2.0</span>
             </h1>
             <p class="text-slate-400 text-lg max-w-2xl mx-auto">
-                Welcome to my digital gallery! Here I showcase my custom FC Mobile player card designs and share my creative journey.
+                Welcome to my digital gallery! Here I showcase my custom FC Mobile player card designs with live global cloud sync.
             </p>
         </div>
     </header>
@@ -37,7 +170,7 @@
             <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
                 <i class="fa-solid fa-cloud-arrow-up text-amber-400"></i> Add New Card
             </h2>
-            <p class="text-slate-400 text-sm mb-6">Upload an image from your device to instantly save and preview it in your portfolio gallery.</p>
+            <p class="text-slate-400 text-sm mb-6">Upload an image to instantly publish it globally for everyone viewing this site.</p>
 
             <form id="uploadForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <input type="text" id="cardTitle" placeholder="Player Name / Card Title" required
@@ -46,7 +179,7 @@
                 <input type="file" id="cardImage" accept="image/*" required
                     class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-slate-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-900 hover:file:bg-amber-400 cursor-pointer">
 
-                <button type="submit" 
+                <button type="submit" id="submitBtn"
                     class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg px-6 py-2.5 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus"></i> Publish Card
                 </button>
@@ -57,13 +190,13 @@
         <section>
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-layer-group text-amber-400"></i> Gallery
+                    <i class="fa-solid fa-layer-group text-amber-400"></i> Global Gallery
                 </h2>
                 <span id="cardCount" class="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-3 py-1 rounded-full">0 cards</span>
             </div>
 
             <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <!-- Cards will appear here -->
+                <!-- Cards will sync dynamically from Firebase -->
             </div>
         </section>
 
@@ -114,7 +247,7 @@
             </div>
 
             <div class="border-t border-slate-700 pt-4 mt-4 text-xs text-slate-400">
-                <p><strong>Development Note:</strong> This website is an Alpha Version featuring compressed mobile-friendly image processing and LocalStorage persistence.</p>
+                <p><strong>Development Note:</strong> Upgraded to Firebase Firestore cloud database for real-time cross-device synchronization.</p>
             </div>
         </section>
 
@@ -125,109 +258,5 @@
         <p>© FC Mobile Custom Card Gallery • CAS Project Portfolio</p>
     </footer>
 
-    <!-- JavaScript Logic with Mobile Compression & LocalStorage -->
-    <script>
-        const uploadForm = document.getElementById('uploadForm');
-        const cardTitleInput = document.getElementById('cardTitle');
-        const cardImageInput = document.getElementById('cardImage');
-        const galleryGrid = document.getElementById('galleryGrid');
-        const cardCount = document.getElementById('cardCount');
-
-        let cards = JSON.parse(localStorage.getItem('fc_cards')) || [];
-
-        function saveAndRender() {
-            try {
-                localStorage.setItem('fc_cards', JSON.stringify(cards));
-            } catch (e) {
-                alert('Storage limit reached! Try deleting some cards.');
-            }
-            renderGallery();
-        }
-
-        function updateCardCount() {
-            cardCount.textContent = `${cards.length} ${cards.length === 1 ? 'card' : 'cards'}`;
-        }
-
-        function renderGallery() {
-            galleryGrid.innerHTML = '';
-            cards.forEach((card, index) => {
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'bg-slate-800 border border-slate-700 rounded-xl overflow-hidden card-shadow flex flex-col justify-between group hover:border-amber-500/50 transition duration-300';
-                
-                cardDiv.innerHTML = `
-                    <div class="p-4 bg-slate-900/50 flex justify-between items-center border-b border-slate-700/50">
-                        <h3 class="font-bold text-white text-sm truncate">${card.title}</h3>
-                        <button onclick="deleteCard(${index})" class="text-slate-500 hover:text-red-400 text-xs transition" title="Delete card">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                    <div class="p-4 flex justify-center items-center bg-slate-950/40 min-h-[220px]">
-                        <img src="${card.image}" alt="${card.title}" class="max-h-60 object-contain rounded-lg">
-                    </div>
-                `;
-
-                galleryGrid.appendChild(cardDiv);
-            });
-            updateCardCount();
-        }
-
-        function deleteCard(index) {
-            cards.splice(index, 1);
-            saveAndRender();
-        }
-
-        uploadForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const title = cardTitleInput.value.trim();
-            const file = cardImageInput.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxSize = 800; // Resize image for fast mobile storage
-
-                        if (width > height) {
-                            if (width > maxSize) {
-                                height *= maxSize / width;
-                                width = maxSize;
-                            }
-                        } else {
-                            if (height > maxSize) {
-                                width *= maxSize / height;
-                                height = maxSize;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
-
-                        cards.unshift({
-                            title: title,
-                            image: compressedDataUrl
-                        });
-                        
-                        saveAndRender();
-                        uploadForm.reset();
-                    };
-                    img.src = event.target.result;
-                };
-
-                reader.readAsDataURL(file);
-            }
-        });
-
-        renderGallery();
-    </script>
 </body>
 </html>
